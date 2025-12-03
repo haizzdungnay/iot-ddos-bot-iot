@@ -74,20 +74,21 @@ pip install -r requirements.txt
 
 ### 4.2. Chuẩn bị dữ liệu
 
-#### **Option 1: UNSW Research (Nguồn chính thức)** ⭐
+#### **Option 1: UNSW OneDrive (Nguồn chính thức - Dễ nhất)** ⭐
 
-Dataset Bot-IoT từ nguồn chính thức:
+Dataset Bot-IoT từ UNSW OneDrive - **Khuyến nghị sử dụng**:
 
-1. **Truy cập và download**:
-   - **UNSW Research**: [Bot-IoT Dataset](https://research.unsw.edu.au/projects/bot-iot-dataset)
-   - **IMPACT CyberTrust** (mirror miễn phí): [Bot-IoT on IMPACT](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
-   - **OpenML** (dễ truy cập): [Bot-IoT on OpenML](https://www.openml.org/d/42072)
+1. **Truy cập UNSW OneDrive**:
+   - **Link**: [UNSW Bot-IoT OneDrive](https://unsw-my.sharepoint.com/personal/z5131399_ad_unsw_edu_au/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fz5131399%5Fad%5Funsw%5Fedu%5Fau%2FDocuments%2FBot%2DIoT%5FDataset&ga=1)
+   - Nguồn chính thức từ UNSW Canberra
+   - Dễ truy cập, không cần đăng ký phức tạp
 
-2. **Chọn phiên bản**:
-   - CSV format: ~16.7 GB (khuyến nghị)
-   - PCAP format: ~69.3 GB (nếu cần raw packet data)
+2. **Download dataset**:
+   - Chọn file CSV (~16.7 GB) hoặc PCAP (~69.3 GB)
+   - Click "Download" trên OneDrive
+   - Chờ download hoàn tất
 
-3. **Sau khi download**, giải nén và đổi tên:
+3. **Setup sau khi download**:
    ```bash
    # Giải nén vào data/raw/
    unzip bot-iot.zip -d data/raw/
@@ -99,9 +100,17 @@ Dataset Bot-IoT từ nguồn chính thức:
    python src/train_lstm.py --config default --data data/raw/UNSW_2018_IoT_Botnet_Dataset_5.csv
    ```
 
-#### **Option 2: Kaggle Alternatives**
+#### **Option 2: Nguồn thay thế**
 
-Các phiên bản Bot-IoT khác trên Kaggle (vẫn hoạt động):
+Nếu link OneDrive không hoạt động, thử các nguồn sau:
+
+- **IMPACT CyberTrust**: [Bot-IoT on IMPACT](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
+- **OpenML**: [Bot-IoT on OpenML](https://www.openml.org/d/42072)
+- **UNSW Research**: [Bot-IoT Dataset](https://research.unsw.edu.au/projects/bot-iot-dataset)
+
+#### **Option 3: Kaggle Alternatives**
+
+Các phiên bản Bot-IoT khác trên Kaggle:
 
 - **CIC-BoT-IoT**: [Kaggle CIC-BoT-IoT](https://www.kaggle.com/datasets/dhoogla/cicbotiot) - Với CICFlowmeter features
 - **NF-BoT-IoT**: [Kaggle NF-BoT-IoT](https://www.kaggle.com/datasets/dhoogla/nfbotiot) - NetFlow version
@@ -118,7 +127,7 @@ kaggle datasets download -d dhoogla/cicbotiot -p data/raw/ --unzip
 kaggle datasets download -d dhoogla/nfbotiot -p data/raw/ --unzip
 ```
 
-#### **Option 3: Dataset IoT DDoS mới hơn**
+#### **Option 4: Dataset IoT DDoS mới hơn**
 
 Nếu muốn thử dataset mới hơn:
 
@@ -277,7 +286,8 @@ Xem thêm trong [TRAINING_GUIDE.md](TRAINING_GUIDE.md#troubleshooting)
 ## 8. Tài liệu tham khảo
 
 ### Datasets:
-- **Bot-IoT (Official)**:
+- **Bot-IoT (Official)** ⭐:
+  - [UNSW OneDrive](https://unsw-my.sharepoint.com/personal/z5131399_ad_unsw_edu_au/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fz5131399%5Fad%5Funsw%5Fedu%5Fau%2FDocuments%2FBot%2DIoT%5FDataset&ga=1) - **Khuyến nghị**
   - [UNSW Research](https://research.unsw.edu.au/projects/bot-iot-dataset)
   - [IMPACT CyberTrust](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
   - [OpenML](https://www.openml.org/d/42072)

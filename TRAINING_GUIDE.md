@@ -31,18 +31,27 @@ Dự án này sử dụng **LSTM (Long Short-Term Memory)** để phát hiện t
 
 Bot-IoT dataset có sẵn từ nhiều nguồn:
 
-#### **Nguồn Khuyến nghị: UNSW Research (Official)** ⭐
+#### **Nguồn Khuyến nghị: UNSW OneDrive (Official)** ⭐
 
-**Option A: UNSW Research / IMPACT CyberTrust**
-- **UNSW Research**: [Bot-IoT Dataset](https://research.unsw.edu.au/projects/bot-iot-dataset)
-- **IMPACT CyberTrust** (mirror miễn phí): [IMPACT Bot-IoT](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
-- **OpenML** (dễ download): [OpenML Bot-IoT](https://www.openml.org/d/42072)
+**Link chính thức**: [UNSW Bot-IoT OneDrive](https://unsw-my.sharepoint.com/personal/z5131399_ad_unsw_edu_au/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fz5131399%5Fad%5Funsw%5Fedu%5Fau%2FDocuments%2FBot%2DIoT%5FDataset&ga=1)
+
+**Hướng dẫn**:
+1. Truy cập link OneDrive trên
+2. Chọn file CSV (~16.7 GB) hoặc PCAP (~69.3 GB)
+3. Click "Download" trên OneDrive
+4. Giải nén vào `data/raw/`
 
 **Kích thước**:
 - CSV format: ~16.7 GB (khuyến nghị)
 - PCAP format: ~69.3 GB
 
-**Option B: Kaggle Alternatives** (vẫn hoạt động)
+#### **Nguồn thay thế** (nếu OneDrive không hoạt động)
+
+- **IMPACT CyberTrust**: [IMPACT Bot-IoT](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
+- **OpenML**: [OpenML Bot-IoT](https://www.openml.org/d/42072)
+- **UNSW Research**: [Bot-IoT Dataset](https://research.unsw.edu.au/projects/bot-iot-dataset)
+
+#### **Kaggle Alternatives** (vẫn hoạt động)
 
 ```bash
 # Cài đặt Kaggle CLI

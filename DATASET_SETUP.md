@@ -2,11 +2,11 @@
 
 ## 📋 Tổng quan
 
-Dự án này hỗ trợ nhiều dataset IoT DDoS khác nhau. Hướng dẫn này sẽ giúp bạn download và setup dataset phù hợp.
+Dự án này hỗ trợ nhiều dataset IoT DDoS. Hướng dẫn này giúp bạn download và setup dataset.
 
 ---
 
-## 🎯 Dataset Khuyến nghị: Bot-IoT
+## 🎯 Dataset: Bot-IoT
 
 **Đặc điểm:**
 - **Kích thước**: ~16.7GB (CSV), ~69.3GB (PCAP)
@@ -16,51 +16,77 @@ Dự án này hỗ trợ nhiều dataset IoT DDoS khác nhau. Hướng dẫn nà
 
 ---
 
-## 🚀 Cách 1: IMPACT CyberTrust (Khuyến nghị - Dễ nhất) ⭐
+## 🚀 Cách 1: UNSW OneDrive (Khuyến nghị - Dễ nhất) ⭐
 
-**Link**: [https://www.impactcybertrust.org/dataset_view?idDataset=1296](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
+### Link chính thức:
+**[UNSW Bot-IoT OneDrive](https://unsw-my.sharepoint.com/personal/z5131399_ad_unsw_edu_au/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fz5131399%5Fad%5Funsw%5Fedu%5Fau%2FDocuments%2FBot%2DIoT%5FDataset&ga=1)**
 
-**Ưu điểm**:
-- Miễn phí, dễ download
-- Có cả CSV và PCAP formats
-- Không cần setup phức tạp
+### Hướng dẫn download:
 
-**Hướng dẫn**:
-1. Truy cập link trên
-2. Click "Download" (có thể cần đăng ký miễn phí)
-3. Chọn CSV format (~16.7GB)
-4. Giải nén vào `data/raw/`
+1. **Truy cập link OneDrive** ở trên
+
+2. **Chọn file để download**:
+   - **CSV format** (~16.7 GB) - Khuyến nghị cho ML
+   - **PCAP format** (~69.3 GB) - Nếu cần raw packets
+
+3. **Click "Download"** trên OneDrive interface
+
+4. **Chờ download hoàn tất**
+
+5. **Giải nén và setup**:
+   ```bash
+   # Giải nén vào data/raw/
+   unzip bot-iot.zip -d data/raw/
+
+   # Hoặc nếu file là tar.gz:
+   tar -xzvf bot-iot.tar.gz -C data/raw/
+
+   # Kiểm tra file
+   ls -lh data/raw/
+
+   # Đổi tên (nếu cần)
+   mv data/raw/UNSW_2018_IoT_Botnet_Dataset_*.csv data/raw/bot_iot.csv
+
+   # Hoặc dùng trực tiếp:
+   python src/train_lstm.py --config default --data data/raw/UNSW_2018_IoT_Botnet_Dataset_5.csv
+   ```
 
 ---
 
-## 🔄 Cách 2: OpenML (Dễ truy cập)
+## 🔄 Cách 2: Nguồn Thay Thế
 
-**Link**: [https://www.openml.org/d/42072](https://www.openml.org/d/42072)
+Nếu link OneDrive không hoạt động, thử:
 
-**Ưu điểm**:
-- Dễ dàng download
-- Format CSV sẵn sàng sử dụng
+### **IMPACT CyberTrust** (Mirror miễn phí)
+- **Link**: [https://www.impactcybertrust.org/dataset_view?idDataset=1296](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
+- Miễn phí, dễ download
+
+### **OpenML**
+- **Link**: [https://www.openml.org/d/42072](https://www.openml.org/d/42072)
+- Format CSV sẵn sàng
+
+### **UNSW Research**
+- **Link**: [https://research.unsw.edu.au/projects/bot-iot-dataset](https://research.unsw.edu.au/projects/bot-iot-dataset)
+- Trang chính thức
 
 ---
 
 ## 📦 Cách 3: Kaggle Alternatives
 
-### **CIC-BoT-IoT** (Với CICFlowmeter features)
-
+### **CIC-BoT-IoT** (CICFlowmeter features)
 **Link**: [https://www.kaggle.com/datasets/dhoogla/cicbotiot](https://www.kaggle.com/datasets/dhoogla/cicbotiot)
 
 ```bash
 # Setup Kaggle CLI
 pip install kaggle
 
-# Setup API token (xem bước dưới)
+# Setup API token (xem bên dưới)
 
 # Download
 kaggle datasets download -d dhoogla/cicbotiot -p data/raw/ --unzip
 ```
 
 ### **NF-BoT-IoT** (NetFlow version)
-
 **Link**: [https://www.kaggle.com/datasets/dhoogla/nfbotiot](https://www.kaggle.com/datasets/dhoogla/nfbotiot)
 
 ```bash
@@ -68,7 +94,6 @@ kaggle datasets download -d dhoogla/nfbotiot -p data/raw/ --unzip
 ```
 
 ### Setup Kaggle API:
-
 1. Đăng nhập [Kaggle](https://www.kaggle.com)
 2. Vào [Settings](https://www.kaggle.com/settings) → API → Create New Token
 3. Di chuyển `kaggle.json`:
@@ -85,17 +110,14 @@ kaggle datasets download -d dhoogla/nfbotiot -p data/raw/ --unzip
 ## 🆕 Cách 4: Dataset Mới Hơn (Thay thế)
 
 ### **CIC IoT-DIAD 2024** (Mới nhất)
-
 - **Link**: [https://www.unb.ca/cic/datasets/iot-diad-2024.html](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
 - 33 attacks, 105 devices
 - Cần chỉnh `label_column` trong `src/config.py`
 
 ### **CICIoT2023**
-
 - **Link**: [https://www.unb.ca/cic/datasets/iotdataset-2023.html](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
 
 ### **IoT-DH Dataset**
-
 - **Link**: [https://data.mendeley.com/datasets/8dns3xbckv/1](https://data.mendeley.com/datasets/8dns3xbckv/1)
 - ~2GB, dễ download
 
@@ -104,17 +126,14 @@ kaggle datasets download -d dhoogla/nfbotiot -p data/raw/ --unzip
 ## ⚙️ Sau khi Download
 
 ```bash
-# Kiểm tra file
-ls -lh data/raw/
-
-# Đổi tên (nếu cần)
-mv data/raw/UNSW_2018_IoT_Botnet_Dataset_*.csv data/raw/bot_iot.csv
-
-# Hoặc dùng trực tiếp:
-python src/train_lstm.py --config default --data data/raw/your_file.csv
-
-# Test load
+# Test load dữ liệu
 python -c "import pandas as pd; df=pd.read_csv('data/raw/bot_iot.csv'); print(f'Shape: {df.shape}')"
+
+# Kiểm tra columns
+python -c "import pandas as pd; df=pd.read_csv('data/raw/bot_iot.csv'); print(df.columns.tolist())"
+
+# Kiểm tra labels
+python -c "import pandas as pd; df=pd.read_csv('data/raw/bot_iot.csv'); print(df['attack'].value_counts())"
 ```
 
 ---
@@ -122,17 +141,14 @@ python -c "import pandas as pd; df=pd.read_csv('data/raw/bot_iot.csv'); print(f'
 ## 🔍 Troubleshooting
 
 ### File quá lớn?
-
-Dùng subset:
 ```python
+# Lấy subset 100K rows
 import pandas as pd
-df = pd.read_csv('data/raw/bot_iot.csv', nrows=100000)  # 100K rows
+df = pd.read_csv('data/raw/bot_iot.csv', nrows=100000)
 df.to_csv('data/raw/bot_iot_sample.csv', index=False)
 ```
 
 ### Label column khác?
-
-Kiểm tra và cập nhật config:
 ```python
 # Kiểm tra
 df = pd.read_csv('data/raw/bot_iot.csv')
@@ -141,6 +157,11 @@ print(df.columns)
 # Cập nhật src/config.py
 label_column = "tên_cột_đúng"
 ```
+
+### Link OneDrive không hoạt động?
+- Thử IMPACT CyberTrust
+- Hoặc Kaggle CIC-BoT-IoT
+- Hoặc OpenML
 
 ---
 
@@ -155,8 +176,9 @@ label_column = "tên_cột_đúng"
 
 ## 🎯 Khuyến nghị
 
-1. **Bắt đầu**: IMPACT CyberTrust (dễ nhất)
-2. **Backup**: Kaggle CIC-BoT-IoT
-3. **Test ngay**: `python src/train_lstm.py --config lightweight --data data/raw/bot_iot.csv`
+1. **Bắt đầu**: UNSW OneDrive (dễ nhất, chính thức)
+2. **Backup**: IMPACT CyberTrust hoặc OpenML
+3. **Alternative**: Kaggle CIC-BoT-IoT
+4. **Test ngay**: `python src/train_lstm.py --config lightweight --data data/raw/bot_iot.csv`
 
 **Good luck! 🚀**
