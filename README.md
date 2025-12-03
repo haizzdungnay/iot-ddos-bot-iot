@@ -45,6 +45,8 @@ iot-ddos-bot-iot/
 ├─ requirements.txt           # danh sách thư viện Python
 ├─ README.md                  # mô tả đề tài (file này)
 ├─ TRAINING_GUIDE.md          # hướng dẫn training chi tiết
+├─ DATASET_SETUP.md           # hướng dẫn download dataset
+├─ quick_start.sh             # script setup nhanh
 └─ .gitignore                 # git ignore
 ```
 
@@ -72,11 +74,55 @@ pip install -r requirements.txt
 
 ### 4.2. Chuẩn bị dữ liệu
 
-1. Download Bot-IoT dataset từ [UNSW Canberra](https://www.unsw.adfa.edu.au/unsw-canberra-cyber/cybersecurity/ADFA-NB15-Datasets/)
-2. Đặt file CSV vào thư mục `data/raw/`:
+#### **Option 1: Bot-IoT từ Kaggle (Khuyến nghị)**
+
+Dataset Bot-IoT có sẵn trên Kaggle, dễ dàng truy cập:
+
+1. Truy cập một trong các link sau:
+   - **Full dataset**: [Bot-IoT Dataset](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot)
+   - **5% sample** (nhẹ hơn, phù hợp test): [BoT-IoT 5% data](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot-5-data)
+   - **All Features 5% sample**: [BoT-IoT All Features](https://www.kaggle.com/datasets/majedjaber/bot-iot-all-features-5-sample)
+
+2. **Download bằng Kaggle CLI** (Nhanh nhất):
    ```bash
-   cp bot_iot.csv data/raw/bot_iot.csv
+   # Cài đặt Kaggle CLI
+   pip install kaggle
+
+   # Cấu hình API token (download từ Kaggle Account Settings)
+   # Đặt kaggle.json vào ~/.kaggle/
+
+   # Download dataset (chọn 1 trong 3):
+   # Full dataset:
+   kaggle datasets download -d vigneshvenkateswaran/bot-iot -p data/raw/ --unzip
+
+   # Hoặc 5% sample (nhẹ hơn):
+   kaggle datasets download -d vigneshvenkateswaran/bot-iot-5-data -p data/raw/ --unzip
    ```
+
+3. **Download thủ công**:
+   - Truy cập link Kaggle trên
+   - Click "Download" (cần đăng nhập Kaggle miễn phí)
+   - Giải nén file vào `data/raw/`
+
+4. **Đổi tên file** (nếu cần):
+   ```bash
+   # Dataset thường có tên như UNSW_2018_IoT_Botnet_Dataset_*.csv
+   # Đổi tên hoặc tạo symlink:
+   mv data/raw/UNSW_2018_IoT_Botnet_Dataset_*.csv data/raw/bot_iot.csv
+   # Hoặc dùng trực tiếp với --data flag
+   ```
+
+#### **Option 2: Dataset IoT DDoS khác**
+
+Nếu muốn thử dataset khác:
+
+- **CIC IoT-DIAD 2024** (Dataset mới nhất): [UNB CIC](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
+- **CICIoT2023**: [UNB CIC IoT 2023](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
+- **IoT-DH Dataset**: [Mendeley Data](https://data.mendeley.com/datasets/8dns3xbckv/1)
+
+**Lưu ý**: Nếu dùng dataset khác, cần chỉnh `label_column` trong `src/config.py` cho phù hợp với tên cột nhãn của dataset đó.
+
+📖 **Xem hướng dẫn chi tiết**: [DATASET_SETUP.md](DATASET_SETUP.md) - Hướng dẫn đầy đủ về cách download và setup dataset.
 
 ### 4.3. Training Model
 
@@ -224,10 +270,19 @@ Xem thêm trong [TRAINING_GUIDE.md](TRAINING_GUIDE.md#troubleshooting)
 
 ## 8. Tài liệu tham khảo
 
-- **Bot-IoT Dataset**: https://www.unsw.adfa.edu.au/unsw-canberra-cyber/cybersecurity/ADFA-NB15-Datasets/
-- **LSTM Theory**: https://colah.github.io/posts/2015-08-Understanding-LSTMs/
-- **TensorFlow/Keras**: https://www.tensorflow.org/guide/keras
-- **Imbalanced Learning**: https://imbalanced-learn.org/
+### Datasets:
+- **Bot-IoT trên Kaggle**:
+  - [Full dataset](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot)
+  - [5% sample](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot-5-data)
+- **CIC IoT-DIAD 2024**: [https://www.unb.ca/cic/datasets/iot-diad-2024.html](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
+- **CICIoT2023**: [https://www.unb.ca/cic/datasets/iotdataset-2023.html](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
+- **IoT-DH Dataset**: [https://data.mendeley.com/datasets/8dns3xbckv/1](https://data.mendeley.com/datasets/8dns3xbckv/1)
+
+### Technical Documentation:
+- **LSTM Theory**: [https://colah.github.io/posts/2015-08-Understanding-LSTMs/](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+- **TensorFlow/Keras**: [https://www.tensorflow.org/guide/keras](https://www.tensorflow.org/guide/keras)
+- **Imbalanced Learning**: [https://imbalanced-learn.org/](https://imbalanced-learn.org/)
+- **Kaggle CLI**: [https://github.com/Kaggle/kaggle-api](https://github.com/Kaggle/kaggle-api)
 
 ---
 

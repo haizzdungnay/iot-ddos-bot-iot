@@ -29,15 +29,48 @@ Dự án này sử dụng **LSTM (Long Short-Term Memory)** để phát hiện t
 
 ### 1. Download Bot-IoT Dataset
 
-Bot-IoT dataset có thể download từ:
-- Trang chủ: https://www.unsw.adfa.edu.au/unsw-canberra-cyber/cybersecurity/ADFA-NB15-Datasets/bot_iot.php
-- Hoặc từ các nguồn mirror khác
+Bot-IoT dataset có sẵn trên nhiều nguồn:
+
+#### **Nguồn Khuyến nghị: Kaggle** ⭐
+
+**Option A: Bot-IoT Full Dataset**
+```bash
+# Cài đặt Kaggle CLI
+pip install kaggle
+
+# Download (cần cấu hình Kaggle API token trước)
+kaggle datasets download -d vigneshvenkateswaran/bot-iot -p data/raw/ --unzip
+```
+- Link: [https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot)
+- Kích thước: ~16GB (full)
+
+**Option B: Bot-IoT 5% Sample** (Nhẹ hơn, khuyến nghị cho test)
+```bash
+kaggle datasets download -d vigneshvenkateswaran/bot-iot-5-data -p data/raw/ --unzip
+```
+- Link: [https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot-5-data](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot-5-data)
+- Kích thước: ~800MB
+
+**Download thủ công từ Kaggle:**
+1. Truy cập link trên
+2. Đăng nhập Kaggle (miễn phí)
+3. Click "Download"
+4. Giải nén vào `data/raw/`
+
+#### **Nguồn thay thế:**
+
+- **CIC IoT-DIAD 2024**: [https://www.unb.ca/cic/datasets/iot-diad-2024.html](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
+- **CICIoT2023**: [https://www.unb.ca/cic/datasets/iotdataset-2023.html](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
+- **IoT-DH Dataset**: [https://data.mendeley.com/datasets/8dns3xbckv/1](https://data.mendeley.com/datasets/8dns3xbckv/1)
 
 ### 2. Đặt dữ liệu vào thư mục
 
 ```bash
-# Đặt file CSV gốc vào data/raw/
-cp bot_iot.csv data/raw/bot_iot.csv
+# Nếu file có tên khác, đổi tên:
+mv data/raw/UNSW_2018_IoT_Botnet_Dataset*.csv data/raw/bot_iot.csv
+
+# Hoặc dùng trực tiếp với --data flag:
+python src/train_lstm.py --config default --data data/raw/UNSW_2018_IoT_Botnet_Dataset_5.csv
 ```
 
 ### 3. Kiểm tra dữ liệu

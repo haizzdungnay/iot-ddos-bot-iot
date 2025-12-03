@@ -41,8 +41,8 @@ echo "✓ Đã tạo các thư mục cần thiết"
 
 echo ""
 echo "[5/5] Kiểm tra dữ liệu..."
-if [ -f "data/raw/bot_iot.csv" ]; then
-    echo "✓ Đã tìm thấy dữ liệu Bot-IoT"
+if [ -f "data/raw/bot_iot.csv" ] || ls data/raw/*.csv 1> /dev/null 2>&1; then
+    echo "✓ Đã tìm thấy dữ liệu CSV trong data/raw/"
 
     echo ""
     echo "=========================================="
@@ -52,7 +52,15 @@ if [ -f "data/raw/bot_iot.csv" ]; then
 
     echo ""
     echo "Đang training model..."
-    python src/train_lstm.py --config default --data data/raw/bot_iot.csv
+
+    # Tìm file CSV đầu tiên
+    CSV_FILE=$(ls data/raw/*.csv 2>/dev/null | head -n 1)
+    if [ -f "data/raw/bot_iot.csv" ]; then
+        CSV_FILE="data/raw/bot_iot.csv"
+    fi
+
+    echo "Sử dụng file: $CSV_FILE"
+    python src/train_lstm.py --config default --data "$CSV_FILE"
 
     echo ""
     echo "=========================================="
@@ -65,15 +73,28 @@ if [ -f "data/raw/bot_iot.csv" ]; then
     echo "Xem TensorBoard bằng: tensorboard --logdir logs/"
 
 else
-    echo "⚠ Không tìm thấy dữ liệu Bot-IoT tại data/raw/bot_iot.csv"
+    echo "⚠ Không tìm thấy dữ liệu trong data/raw/"
     echo ""
-    echo "Vui lòng:"
-    echo "  1. Download Bot-IoT dataset từ UNSW Canberra"
-    echo "  2. Đặt file CSV vào data/raw/bot_iot.csv"
-    echo "  3. Chạy lại script này"
+    echo "=========================================="
+    echo "HƯỚNG DẪN DOWNLOAD DATASET"
+    echo "=========================================="
     echo ""
-    echo "Hoặc chỉ định đường dẫn khác:"
-    echo "  python src/train_lstm.py --config default --data path/to/your/data.csv"
+    echo "Option 1: Download từ Kaggle (Khuyến nghị - Dễ nhất)"
+    echo "  1. Cài đặt Kaggle CLI: pip install kaggle"
+    echo "  2. Setup API token (xem DATASET_SETUP.md)"
+    echo "  3. Download:"
+    echo "     kaggle datasets download -d vigneshvenkateswaran/bot-iot-5-data -p data/raw/ --unzip"
+    echo ""
+    echo "Option 2: Download thủ công"
+    echo "  - Bot-IoT 5% (800MB): https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot-5-data"
+    echo "  - Bot-IoT Full (16GB): https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot"
+    echo ""
+    echo "Option 3: Dataset khác"
+    echo "  - CIC IoT-DIAD 2024: https://www.unb.ca/cic/datasets/iot-diad-2024.html"
+    echo "  - Xem thêm trong DATASET_SETUP.md"
+    echo ""
+    echo "Sau khi download, chạy lại script này hoặc:"
+    echo "  python src/train_lstm.py --config default --data data/raw/your_file.csv"
 fi
 
 echo ""
