@@ -29,39 +29,42 @@ Dự án này sử dụng **LSTM (Long Short-Term Memory)** để phát hiện t
 
 ### 1. Download Bot-IoT Dataset
 
-Bot-IoT dataset có sẵn trên nhiều nguồn:
+Bot-IoT dataset có sẵn từ nhiều nguồn:
 
-#### **Nguồn Khuyến nghị: Kaggle** ⭐
+#### **Nguồn Khuyến nghị: UNSW Research (Official)** ⭐
 
-**Option A: Bot-IoT Full Dataset**
+**Option A: UNSW Research / IMPACT CyberTrust**
+- **UNSW Research**: [Bot-IoT Dataset](https://research.unsw.edu.au/projects/bot-iot-dataset)
+- **IMPACT CyberTrust** (mirror miễn phí): [IMPACT Bot-IoT](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
+- **OpenML** (dễ download): [OpenML Bot-IoT](https://www.openml.org/d/42072)
+
+**Kích thước**:
+- CSV format: ~16.7 GB (khuyến nghị)
+- PCAP format: ~69.3 GB
+
+**Option B: Kaggle Alternatives** (vẫn hoạt động)
+
 ```bash
 # Cài đặt Kaggle CLI
 pip install kaggle
 
-# Download (cần cấu hình Kaggle API token trước)
-kaggle datasets download -d vigneshvenkateswaran/bot-iot -p data/raw/ --unzip
+# Setup API token (xem DATASET_SETUP.md)
+
+# Download CIC-BoT-IoT (với CICFlowmeter features):
+kaggle datasets download -d dhoogla/cicbotiot -p data/raw/ --unzip
+
+# Hoặc NF-BoT-IoT (NetFlow version):
+kaggle datasets download -d dhoogla/nfbotiot -p data/raw/ --unzip
 ```
-- Link: [https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot)
-- Kích thước: ~16GB (full)
 
-**Option B: Bot-IoT 5% Sample** (Nhẹ hơn, khuyến nghị cho test)
-```bash
-kaggle datasets download -d vigneshvenkateswaran/bot-iot-5-data -p data/raw/ --unzip
-```
-- Link: [https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot-5-data](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot-5-data)
-- Kích thước: ~800MB
+- **CIC-BoT-IoT**: [Kaggle Link](https://www.kaggle.com/datasets/dhoogla/cicbotiot)
+- **NF-BoT-IoT**: [Kaggle Link](https://www.kaggle.com/datasets/dhoogla/nfbotiot)
 
-**Download thủ công từ Kaggle:**
-1. Truy cập link trên
-2. Đăng nhập Kaggle (miễn phí)
-3. Click "Download"
-4. Giải nén vào `data/raw/`
+#### **Nguồn thay thế (Dataset mới hơn):**
 
-#### **Nguồn thay thế:**
-
-- **CIC IoT-DIAD 2024**: [https://www.unb.ca/cic/datasets/iot-diad-2024.html](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
-- **CICIoT2023**: [https://www.unb.ca/cic/datasets/iotdataset-2023.html](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
-- **IoT-DH Dataset**: [https://data.mendeley.com/datasets/8dns3xbckv/1](https://data.mendeley.com/datasets/8dns3xbckv/1)
+- **CIC IoT-DIAD 2024** (mới nhất): [Download](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
+- **CICIoT2023**: [Download](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
+- **IoT-DH Dataset**: [Mendeley](https://data.mendeley.com/datasets/8dns3xbckv/1)
 
 ### 2. Đặt dữ liệu vào thư mục
 

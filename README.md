@@ -74,50 +74,56 @@ pip install -r requirements.txt
 
 ### 4.2. Chuẩn bị dữ liệu
 
-#### **Option 1: Bot-IoT từ Kaggle (Khuyến nghị)**
+#### **Option 1: UNSW Research (Nguồn chính thức)** ⭐
 
-Dataset Bot-IoT có sẵn trên Kaggle, dễ dàng truy cập:
+Dataset Bot-IoT từ nguồn chính thức:
 
-1. Truy cập một trong các link sau:
-   - **Full dataset**: [Bot-IoT Dataset](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot)
-   - **5% sample** (nhẹ hơn, phù hợp test): [BoT-IoT 5% data](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot-5-data)
-   - **All Features 5% sample**: [BoT-IoT All Features](https://www.kaggle.com/datasets/majedjaber/bot-iot-all-features-5-sample)
+1. **Truy cập và download**:
+   - **UNSW Research**: [Bot-IoT Dataset](https://research.unsw.edu.au/projects/bot-iot-dataset)
+   - **IMPACT CyberTrust** (mirror miễn phí): [Bot-IoT on IMPACT](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
+   - **OpenML** (dễ truy cập): [Bot-IoT on OpenML](https://www.openml.org/d/42072)
 
-2. **Download bằng Kaggle CLI** (Nhanh nhất):
+2. **Chọn phiên bản**:
+   - CSV format: ~16.7 GB (khuyến nghị)
+   - PCAP format: ~69.3 GB (nếu cần raw packet data)
+
+3. **Sau khi download**, giải nén và đổi tên:
    ```bash
-   # Cài đặt Kaggle CLI
-   pip install kaggle
+   # Giải nén vào data/raw/
+   unzip bot-iot.zip -d data/raw/
 
-   # Cấu hình API token (download từ Kaggle Account Settings)
-   # Đặt kaggle.json vào ~/.kaggle/
-
-   # Download dataset (chọn 1 trong 3):
-   # Full dataset:
-   kaggle datasets download -d vigneshvenkateswaran/bot-iot -p data/raw/ --unzip
-
-   # Hoặc 5% sample (nhẹ hơn):
-   kaggle datasets download -d vigneshvenkateswaran/bot-iot-5-data -p data/raw/ --unzip
-   ```
-
-3. **Download thủ công**:
-   - Truy cập link Kaggle trên
-   - Click "Download" (cần đăng nhập Kaggle miễn phí)
-   - Giải nén file vào `data/raw/`
-
-4. **Đổi tên file** (nếu cần):
-   ```bash
-   # Dataset thường có tên như UNSW_2018_IoT_Botnet_Dataset_*.csv
-   # Đổi tên hoặc tạo symlink:
+   # Đổi tên file (nếu cần)
    mv data/raw/UNSW_2018_IoT_Botnet_Dataset_*.csv data/raw/bot_iot.csv
-   # Hoặc dùng trực tiếp với --data flag
+
+   # Hoặc dùng trực tiếp với --data flag:
+   python src/train_lstm.py --config default --data data/raw/UNSW_2018_IoT_Botnet_Dataset_5.csv
    ```
 
-#### **Option 2: Dataset IoT DDoS khác**
+#### **Option 2: Kaggle Alternatives**
 
-Nếu muốn thử dataset khác:
+Các phiên bản Bot-IoT khác trên Kaggle (vẫn hoạt động):
 
-- **CIC IoT-DIAD 2024** (Dataset mới nhất): [UNB CIC](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
-- **CICIoT2023**: [UNB CIC IoT 2023](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
+- **CIC-BoT-IoT**: [Kaggle CIC-BoT-IoT](https://www.kaggle.com/datasets/dhoogla/cicbotiot) - Với CICFlowmeter features
+- **NF-BoT-IoT**: [Kaggle NF-BoT-IoT](https://www.kaggle.com/datasets/dhoogla/nfbotiot) - NetFlow version
+
+**Download bằng Kaggle CLI**:
+```bash
+# Cài Kaggle CLI và setup API token (xem DATASET_SETUP.md)
+pip install kaggle
+
+# Download CIC-BoT-IoT:
+kaggle datasets download -d dhoogla/cicbotiot -p data/raw/ --unzip
+
+# Hoặc NF-BoT-IoT:
+kaggle datasets download -d dhoogla/nfbotiot -p data/raw/ --unzip
+```
+
+#### **Option 3: Dataset IoT DDoS mới hơn**
+
+Nếu muốn thử dataset mới hơn:
+
+- **CIC IoT-DIAD 2024** (mới nhất - 2024): [Download](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
+- **CICIoT2023**: [Download](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
 - **IoT-DH Dataset**: [Mendeley Data](https://data.mendeley.com/datasets/8dns3xbckv/1)
 
 **Lưu ý**: Nếu dùng dataset khác, cần chỉnh `label_column` trong `src/config.py` cho phù hợp với tên cột nhãn của dataset đó.
@@ -271,12 +277,18 @@ Xem thêm trong [TRAINING_GUIDE.md](TRAINING_GUIDE.md#troubleshooting)
 ## 8. Tài liệu tham khảo
 
 ### Datasets:
-- **Bot-IoT trên Kaggle**:
-  - [Full dataset](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot)
-  - [5% sample](https://www.kaggle.com/datasets/vigneshvenkateswaran/bot-iot-5-data)
-- **CIC IoT-DIAD 2024**: [https://www.unb.ca/cic/datasets/iot-diad-2024.html](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
-- **CICIoT2023**: [https://www.unb.ca/cic/datasets/iotdataset-2023.html](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
-- **IoT-DH Dataset**: [https://data.mendeley.com/datasets/8dns3xbckv/1](https://data.mendeley.com/datasets/8dns3xbckv/1)
+- **Bot-IoT (Official)**:
+  - [UNSW Research](https://research.unsw.edu.au/projects/bot-iot-dataset)
+  - [IMPACT CyberTrust](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
+  - [OpenML](https://www.openml.org/d/42072)
+  - [IEEE DataPort](https://ieee-dataport.org/documents/bot-iot-dataset) (cần subscription)
+- **Bot-IoT Alternatives (Kaggle)**:
+  - [CIC-BoT-IoT](https://www.kaggle.com/datasets/dhoogla/cicbotiot)
+  - [NF-BoT-IoT](https://www.kaggle.com/datasets/dhoogla/nfbotiot)
+- **Other IoT DDoS Datasets**:
+  - [CIC IoT-DIAD 2024](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
+  - [CICIoT2023](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
+  - [IoT-DH Dataset](https://data.mendeley.com/datasets/8dns3xbckv/1)
 
 ### Technical Documentation:
 - **LSTM Theory**: [https://colah.github.io/posts/2015-08-Understanding-LSTMs/](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)
