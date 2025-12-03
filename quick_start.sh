@@ -41,8 +41,8 @@ echo "✓ Đã tạo các thư mục cần thiết"
 
 echo ""
 echo "[5/5] Kiểm tra dữ liệu..."
-if [ -f "data/raw/bot_iot.csv" ]; then
-    echo "✓ Đã tìm thấy dữ liệu Bot-IoT"
+if [ -f "data/raw/bot_iot.csv" ] || ls data/raw/*.csv 1> /dev/null 2>&1; then
+    echo "✓ Đã tìm thấy dữ liệu CSV trong data/raw/"
 
     echo ""
     echo "=========================================="
@@ -52,7 +52,15 @@ if [ -f "data/raw/bot_iot.csv" ]; then
 
     echo ""
     echo "Đang training model..."
-    python src/train_lstm.py --config default --data data/raw/bot_iot.csv
+
+    # Tìm file CSV đầu tiên
+    CSV_FILE=$(ls data/raw/*.csv 2>/dev/null | head -n 1)
+    if [ -f "data/raw/bot_iot.csv" ]; then
+        CSV_FILE="data/raw/bot_iot.csv"
+    fi
+
+    echo "Sử dụng file: $CSV_FILE"
+    python src/train_lstm.py --config default --data "$CSV_FILE"
 
     echo ""
     echo "=========================================="
@@ -65,15 +73,34 @@ if [ -f "data/raw/bot_iot.csv" ]; then
     echo "Xem TensorBoard bằng: tensorboard --logdir logs/"
 
 else
-    echo "⚠ Không tìm thấy dữ liệu Bot-IoT tại data/raw/bot_iot.csv"
+    echo "⚠ Không tìm thấy dữ liệu trong data/raw/"
     echo ""
-    echo "Vui lòng:"
-    echo "  1. Download Bot-IoT dataset từ UNSW Canberra"
-    echo "  2. Đặt file CSV vào data/raw/bot_iot.csv"
-    echo "  3. Chạy lại script này"
+    echo "=========================================="
+    echo "HƯỚNG DẪN DOWNLOAD DATASET"
+    echo "=========================================="
     echo ""
-    echo "Hoặc chỉ định đường dẫn khác:"
-    echo "  python src/train_lstm.py --config default --data path/to/your/data.csv"
+    echo "Option 1: UNSW OneDrive (Khuyến nghị - Dễ nhất, Chính thức) ⭐"
+    echo "  Link: https://unsw-my.sharepoint.com/:f:/g/personal/z5131399_ad_unsw_edu_au/EvWlXAuKAMlOq7alJAV-JG0BbQM-P_j51_tBX_EXlCz6fg"
+    echo "  - Nguồn chính thức từ UNSW"
+    echo "  - CSV format ~16.7GB, PCAP ~69.3GB"
+    echo "  - Click Download trên OneDrive"
+    echo ""
+    echo "Option 2: Nguồn thay thế"
+    echo "  - IMPACT CyberTrust: https://www.impactcybertrust.org/dataset_view?idDataset=1296"
+    echo "  - OpenML: https://www.openml.org/d/42072"
+    echo ""
+    echo "Option 3: Kaggle Alternatives"
+    echo "  - CIC-BoT-IoT: https://www.kaggle.com/datasets/dhoogla/cicbotiot"
+    echo "  - NF-BoT-IoT: https://www.kaggle.com/datasets/dhoogla/nfbotiot"
+    echo ""
+    echo "Option 4: Dataset mới hơn"
+    echo "  - CIC IoT-DIAD 2024: https://www.unb.ca/cic/datasets/iot-diad-2024.html"
+    echo "  - IoT-DH: https://data.mendeley.com/datasets/8dns3xbckv/1"
+    echo ""
+    echo "📖 Xem hướng dẫn chi tiết: DATASET_SETUP.md"
+    echo ""
+    echo "Sau khi download, chạy lại script này hoặc:"
+    echo "  python src/train_lstm.py --config default --data data/raw/your_file.csv"
 fi
 
 echo ""

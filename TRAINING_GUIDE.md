@@ -29,15 +29,60 @@ Dự án này sử dụng **LSTM (Long Short-Term Memory)** để phát hiện t
 
 ### 1. Download Bot-IoT Dataset
 
-Bot-IoT dataset có thể download từ:
-- Trang chủ: https://www.unsw.adfa.edu.au/unsw-canberra-cyber/cybersecurity/ADFA-NB15-Datasets/bot_iot.php
-- Hoặc từ các nguồn mirror khác
+Bot-IoT dataset có sẵn từ nhiều nguồn:
+
+#### **Nguồn Khuyến nghị: UNSW OneDrive (Official)** ⭐
+
+**Link chính thức**: [UNSW Bot-IoT OneDrive](https://unsw-my.sharepoint.com/personal/z5131399_ad_unsw_edu_au/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fz5131399%5Fad%5Funsw%5Fedu%5Fau%2FDocuments%2FBot%2DIoT%5FDataset&ga=1)
+
+**Hướng dẫn**:
+1. Truy cập link OneDrive trên
+2. Chọn file CSV (~16.7 GB) hoặc PCAP (~69.3 GB)
+3. Click "Download" trên OneDrive
+4. Giải nén vào `data/raw/`
+
+**Kích thước**:
+- CSV format: ~16.7 GB (khuyến nghị)
+- PCAP format: ~69.3 GB
+
+#### **Nguồn thay thế** (nếu OneDrive không hoạt động)
+
+- **IMPACT CyberTrust**: [IMPACT Bot-IoT](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
+- **OpenML**: [OpenML Bot-IoT](https://www.openml.org/d/42072)
+- **UNSW Research**: [Bot-IoT Dataset](https://research.unsw.edu.au/projects/bot-iot-dataset)
+
+#### **Kaggle Alternatives** (vẫn hoạt động)
+
+```bash
+# Cài đặt Kaggle CLI
+pip install kaggle
+
+# Setup API token (xem DATASET_SETUP.md)
+
+# Download CIC-BoT-IoT (với CICFlowmeter features):
+kaggle datasets download -d dhoogla/cicbotiot -p data/raw/ --unzip
+
+# Hoặc NF-BoT-IoT (NetFlow version):
+kaggle datasets download -d dhoogla/nfbotiot -p data/raw/ --unzip
+```
+
+- **CIC-BoT-IoT**: [Kaggle Link](https://www.kaggle.com/datasets/dhoogla/cicbotiot)
+- **NF-BoT-IoT**: [Kaggle Link](https://www.kaggle.com/datasets/dhoogla/nfbotiot)
+
+#### **Nguồn thay thế (Dataset mới hơn):**
+
+- **CIC IoT-DIAD 2024** (mới nhất): [Download](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
+- **CICIoT2023**: [Download](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
+- **IoT-DH Dataset**: [Mendeley](https://data.mendeley.com/datasets/8dns3xbckv/1)
 
 ### 2. Đặt dữ liệu vào thư mục
 
 ```bash
-# Đặt file CSV gốc vào data/raw/
-cp bot_iot.csv data/raw/bot_iot.csv
+# Nếu file có tên khác, đổi tên:
+mv data/raw/UNSW_2018_IoT_Botnet_Dataset*.csv data/raw/bot_iot.csv
+
+# Hoặc dùng trực tiếp với --data flag:
+python src/train_lstm.py --config default --data data/raw/UNSW_2018_IoT_Botnet_Dataset_5.csv
 ```
 
 ### 3. Kiểm tra dữ liệu
