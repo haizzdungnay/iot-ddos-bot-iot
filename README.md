@@ -45,6 +45,8 @@ iot-ddos-bot-iot/
 ├─ requirements.txt           # danh sách thư viện Python
 ├─ README.md                  # mô tả đề tài (file này)
 ├─ TRAINING_GUIDE.md          # hướng dẫn training chi tiết
+├─ DATASET_SETUP.md           # hướng dẫn download dataset
+├─ quick_start.sh             # script setup nhanh
 └─ .gitignore                 # git ignore
 ```
 
@@ -72,11 +74,70 @@ pip install -r requirements.txt
 
 ### 4.2. Chuẩn bị dữ liệu
 
-1. Download Bot-IoT dataset từ [UNSW Canberra](https://www.unsw.adfa.edu.au/unsw-canberra-cyber/cybersecurity/ADFA-NB15-Datasets/)
-2. Đặt file CSV vào thư mục `data/raw/`:
+#### **Option 1: UNSW OneDrive (Nguồn chính thức - Dễ nhất)** ⭐
+
+Dataset Bot-IoT từ UNSW OneDrive - **Khuyến nghị sử dụng**:
+
+1. **Truy cập UNSW OneDrive**:
+   - **Link**: [UNSW Bot-IoT OneDrive](https://unsw-my.sharepoint.com/personal/z5131399_ad_unsw_edu_au/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fz5131399%5Fad%5Funsw%5Fedu%5Fau%2FDocuments%2FBot%2DIoT%5FDataset&ga=1)
+   - Nguồn chính thức từ UNSW Canberra
+   - Dễ truy cập, không cần đăng ký phức tạp
+
+2. **Download dataset**:
+   - Chọn file CSV (~16.7 GB) hoặc PCAP (~69.3 GB)
+   - Click "Download" trên OneDrive
+   - Chờ download hoàn tất
+
+3. **Setup sau khi download**:
    ```bash
-   cp bot_iot.csv data/raw/bot_iot.csv
+   # Giải nén vào data/raw/
+   unzip bot-iot.zip -d data/raw/
+
+   # Đổi tên file (nếu cần)
+   mv data/raw/UNSW_2018_IoT_Botnet_Dataset_*.csv data/raw/bot_iot.csv
+
+   # Hoặc dùng trực tiếp với --data flag:
+   python src/train_lstm.py --config default --data data/raw/UNSW_2018_IoT_Botnet_Dataset_5.csv
    ```
+
+#### **Option 2: Nguồn thay thế**
+
+Nếu link OneDrive không hoạt động, thử các nguồn sau:
+
+- **IMPACT CyberTrust**: [Bot-IoT on IMPACT](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
+- **OpenML**: [Bot-IoT on OpenML](https://www.openml.org/d/42072)
+- **UNSW Research**: [Bot-IoT Dataset](https://research.unsw.edu.au/projects/bot-iot-dataset)
+
+#### **Option 3: Kaggle Alternatives**
+
+Các phiên bản Bot-IoT khác trên Kaggle:
+
+- **CIC-BoT-IoT**: [Kaggle CIC-BoT-IoT](https://www.kaggle.com/datasets/dhoogla/cicbotiot) - Với CICFlowmeter features
+- **NF-BoT-IoT**: [Kaggle NF-BoT-IoT](https://www.kaggle.com/datasets/dhoogla/nfbotiot) - NetFlow version
+
+**Download bằng Kaggle CLI**:
+```bash
+# Cài Kaggle CLI và setup API token (xem DATASET_SETUP.md)
+pip install kaggle
+
+# Download CIC-BoT-IoT:
+kaggle datasets download -d dhoogla/cicbotiot -p data/raw/ --unzip
+
+# Hoặc NF-BoT-IoT:
+kaggle datasets download -d dhoogla/nfbotiot -p data/raw/ --unzip
+```
+
+#### **Option 4: Dataset IoT DDoS mới hơn**
+
+Nếu muốn thử dataset mới hơn:
+
+- **CIC IoT-DIAD 2024** (mới nhất - 2024): [Download](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
+- **CICIoT2023**: [Download](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
+- **IoT-DH Dataset**: [Mendeley Data](https://data.mendeley.com/datasets/8dns3xbckv/1)
+
+**Lưu ý**: Nếu dùng dataset khác, cần chỉnh `label_column` trong `src/config.py` cho phù hợp với tên cột nhãn của dataset đó.
+
+📖 **Xem hướng dẫn chi tiết**: [DATASET_SETUP.md](DATASET_SETUP.md) - Hướng dẫn đầy đủ về cách download và setup dataset.
 
 ### 4.3. Training Model
 
@@ -224,10 +285,26 @@ Xem thêm trong [TRAINING_GUIDE.md](TRAINING_GUIDE.md#troubleshooting)
 
 ## 8. Tài liệu tham khảo
 
-- **Bot-IoT Dataset**: https://www.unsw.adfa.edu.au/unsw-canberra-cyber/cybersecurity/ADFA-NB15-Datasets/
-- **LSTM Theory**: https://colah.github.io/posts/2015-08-Understanding-LSTMs/
-- **TensorFlow/Keras**: https://www.tensorflow.org/guide/keras
-- **Imbalanced Learning**: https://imbalanced-learn.org/
+### Datasets:
+- **Bot-IoT (Official)** ⭐:
+  - [UNSW OneDrive](https://unsw-my.sharepoint.com/personal/z5131399_ad_unsw_edu_au/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fz5131399%5Fad%5Funsw%5Fedu%5Fau%2FDocuments%2FBot%2DIoT%5FDataset&ga=1) - **Khuyến nghị**
+  - [UNSW Research](https://research.unsw.edu.au/projects/bot-iot-dataset)
+  - [IMPACT CyberTrust](https://www.impactcybertrust.org/dataset_view?idDataset=1296)
+  - [OpenML](https://www.openml.org/d/42072)
+  - [IEEE DataPort](https://ieee-dataport.org/documents/bot-iot-dataset) (cần subscription)
+- **Bot-IoT Alternatives (Kaggle)**:
+  - [CIC-BoT-IoT](https://www.kaggle.com/datasets/dhoogla/cicbotiot)
+  - [NF-BoT-IoT](https://www.kaggle.com/datasets/dhoogla/nfbotiot)
+- **Other IoT DDoS Datasets**:
+  - [CIC IoT-DIAD 2024](https://www.unb.ca/cic/datasets/iot-diad-2024.html)
+  - [CICIoT2023](https://www.unb.ca/cic/datasets/iotdataset-2023.html)
+  - [IoT-DH Dataset](https://data.mendeley.com/datasets/8dns3xbckv/1)
+
+### Technical Documentation:
+- **LSTM Theory**: [https://colah.github.io/posts/2015-08-Understanding-LSTMs/](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+- **TensorFlow/Keras**: [https://www.tensorflow.org/guide/keras](https://www.tensorflow.org/guide/keras)
+- **Imbalanced Learning**: [https://imbalanced-learn.org/](https://imbalanced-learn.org/)
+- **Kaggle CLI**: [https://github.com/Kaggle/kaggle-api](https://github.com/Kaggle/kaggle-api)
 
 ---
 
