@@ -1,5 +1,5 @@
 """
-Module xử lý dữ liệu Bot-IoT Dataset cho phát hiện DDoS
+Module xử lý dữ liệu Bot-IoT Dataset cho phát hiện DDoS //  preprocess.py
 """
 
 import pandas as pd
@@ -21,7 +21,8 @@ def load_raw_data(path: str) -> pd.DataFrame:
         DataFrame chứa dữ liệu
     """
     print(f"Đang load dữ liệu từ: {path}")
-    df = pd.read_csv(path)
+    # low_memory=False để tránh DtypeWarning và đọc chính xác kiểu dữ liệu hơn
+    df = pd.read_csv(path, low_memory=False)
     print(f"Đã load {len(df)} mẫu với {len(df.columns)} cột")
     return df
 
@@ -59,37 +60,58 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def encode_labels(df: pd.DataFrame, label_col: str = 'attack',
-                  binary: bool = True) -> Tuple[pd.DataFrame, LabelEncoder]:
+def encode_labels(
+    df: pd.DataFrame,
+    label_col: str = 'attack',
+    binary: bool = True
+) -> Tuple[pd.DataFrame, Optional[LabelEncoder]]:
     """
     Encode nhãn thành dạng số
 
     Args:
         df: DataFrame
-        label_col: tên cột nhãn
+        label_col: tên cột nhãn (vd: 'attack' hoặc 'category')
         binary: True nếu binary classification (Normal=0, Attack=1)
 
     Returns:
-        DataFrame với nhãn đã encode, LabelEncoder object
+        DataFrame với nhãn đã encode, LabelEncoder object (None nếu binary)
     """
     print(f"\n=== Encoding nhãn từ cột '{label_col}' ===")
 
     if binary:
-        # Binary classification: Normal vs DDoS/Attack
-        # Giả sử nhãn có dạng: 'Normal', 'DDoS', hoặc các loại attack khác
-        df['label_binary'] = df[label_col].apply(
-            lambda x: 0 if str(x).lower() == 'normal' else 1
-        )
-        print(f"Phân phối nhãn binary:")
-        print(df['label_binary'].value_counts())
+        # Trường hợp dùng cột 'attack' với nhãn 0/1 (0 = Normal, 1 = Attack)
+        if label_col == "attack":
+            # Ép kiểu về int để đảm bảo 0/1
+            df["label_binary"] = df[label_col].astype(int)
+
+        # Trường hợp dùng cột 'category': Normal vs các loại tấn công khác
+        elif label_col == "category":
+            # Normal -> 0, còn lại (DDoS, Reconnaissance, Theft, ...) -> 1
+            df["label_binary"] = (
+                df[label_col].astype(str).str.lower() != "normal"
+            ).astype(int)
+
+        # Trường hợp khác: fallback đơn giản
+        else:
+            def _to_binary(x):
+                s = str(x).lower()
+                if s == "normal" or s == "0":
+                    return 0
+                return 1
+
+            df["label_binary"] = df[label_col].map(_to_binary).astype(int)
+
+        print("Phân phối nhãn binary:")
+        print(df["label_binary"].value_counts())
         return df, None
+
     else:
         # Multi-class classification
         le = LabelEncoder()
-        df['label_encoded'] = le.fit_transform(df[label_col])
+        df["label_encoded"] = le.fit_transform(df[label_col])
         print(f"Các lớp: {le.classes_}")
-        print(f"Phân phối nhãn:")
-        print(df['label_encoded'].value_counts())
+        print("Phân phối nhãn:")
+        print(df["label_encoded"].value_counts())
         return df, le
 
 
@@ -105,8 +127,10 @@ def select_features(df: pd.DataFrame, exclude_cols: Optional[List[str]] = None) 
         Danh sách tên cột features
     """
     if exclude_cols is None:
-        exclude_cols = ['attack', 'category', 'subcategory', 'label',
-                       'label_binary', 'label_encoded']
+        exclude_cols = [
+            'attack', 'category', 'subcategory', 'label',
+            'label_binary', 'label_encoded'
+        ]
 
     # Lấy tất cả cột số
     numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
@@ -234,7 +258,13 @@ def full_preprocessing_pipeline(data_path: str,
     df = clean_data(df)
 
     # 3. Encode labels
-    df, label_encoder = encode_labels(df, label_col='attack', binary=binary_classification)
+    # Mặc định dùng cột 'attack' (0 = Normal, 1 = Attack).
+    # Nếu sau này muốn dùng 'category' thì gọi encode_labels với label_col='category'.
+    df, label_encoder = encode_labels(
+        df,
+        label_col='attack',
+        binary=binary_classification
+    )
     label_col = 'label_binary' if binary_classification else 'label_encoded'
 
     # 4. Select features

@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.utils.class_weight import compute_class_weight
 from imblearn.over_sampling import SMOTE
-
+from sklearn.utils import class_weight
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input, Bidirectional
@@ -141,23 +141,28 @@ def prepare_callbacks(config: TrainingConfig):
 
 def calculate_class_weights(y_train):
     """
-    Tính class weights để xử lý imbalanced data
-
-    Args:
-        y_train: nhãn training set
-
-    Returns:
-        class_weight dict
+    Tính class_weight cho bài toán nhị phân/multiclass.
+    Nếu dữ liệu chỉ có 1 lớp thì bỏ qua class_weight.
     """
     classes = np.unique(y_train)
-    weights = compute_class_weight('balanced', classes=classes, y=y_train)
-    class_weight = dict(zip(classes, weights))
+    print("\n=== Class weights ===")
 
-    print(f"\n=== Class weights ===")
-    print(f"Class 0 (Normal): {class_weight[0]:.4f}")
-    print(f"Class 1 (Attack): {class_weight[1]:.4f}")
+    # Trường hợp chỉ có 1 lớp → không áp dụng class_weight
+    if len(classes) < 2:
+        print(f"Chỉ tìm thấy {len(classes)} lớp trong y_train: {classes}")
+        print("Không áp dụng class_weight (trả về None).")
+        return None
 
-    return class_weight
+    weights = class_weight.compute_class_weight(
+        class_weight="balanced",
+        classes=classes,
+        y=y_train
+    )
+
+    cw = {int(c): float(w) for c, w in zip(classes, weights)}
+    for c, w in cw.items():
+        print(f"Class {c}: {w:.4f}")
+    return cw
 
 
 def apply_smote(X_train, y_train):
@@ -311,20 +316,36 @@ def train_model(config_name: str = "default", data_path: str = None):
     print(cm)
 
     print("\nClassification Report:")
-    report = classification_report(y_test, y_pred, digits=4,
-                                   target_names=['Normal', 'Attack'])
+    # Xác định các lớp thực sự xuất hiện trong y_test
+    labels = np.unique(y_test)
+
+    # Nếu bạn vẫn muốn gắn tên 0→Normal, 1→Attack:
+    label_names_map = {0: "Normal", 1: "Attack"}
+    target_names = [label_names_map.get(int(c), f"Class_{int(c)}") for c in labels]
+
+    report = classification_report(
+        y_test,
+        y_pred,
+        labels=labels,
+        target_names=target_names,
+        digits=4
+    )
     print(report)
 
     # 9. Save results
     save_training_history(history, config)
     save_preprocessor(scaler, feature_cols, config.model.model_dir)
 
-    # Lưu metrics
     metrics = {
         'confusion_matrix': cm.tolist(),
-        'classification_report': classification_report(y_test, y_pred,
-                                                       output_dict=True)
+        'classification_report': classification_report(
+            y_test,
+            y_pred,
+            labels=labels,
+            output_dict=True
+        )
     }
+
 
     metrics_path = os.path.join(config.results_dir, "metrics.json")
     with open(metrics_path, 'w') as f:

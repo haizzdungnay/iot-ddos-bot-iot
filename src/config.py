@@ -3,7 +3,7 @@ File cấu hình cho dự án phát hiện DDoS với LSTM
 """
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass , field
 from typing import Optional
 
 
@@ -52,8 +52,8 @@ class ModelConfig:
 @dataclass
 class TrainingConfig:
     """Cấu hình tổng thể cho training"""
-    data: DataConfig = DataConfig()
-    model: ModelConfig = ModelConfig()
+    data: DataConfig = field(default_factory=DataConfig)
+    model: ModelConfig = field(default_factory=ModelConfig)
 
     # Paths
     log_dir: str = "logs"
