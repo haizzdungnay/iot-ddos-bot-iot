@@ -146,6 +146,7 @@ Nếu muốn thử dataset mới hơn:
 ```bash
 # Training với config mặc định
 python src/train_lstm.py --config default --data data/raw/bot_iot.csv
+python src\train_lstm.py --config default --data data/raw/bot_iot_5pc_5.csv
 
 # Training với config khác
 python src/train_lstm.py --config lightweight --data data/raw/bot_iot.csv
